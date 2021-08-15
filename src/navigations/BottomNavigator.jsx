@@ -11,7 +11,7 @@ const Tab = createBottomTabNavigator()
 export default function BottomNavigator() {
     return (
         <NavigationContainer>
-            <Tab.Navigator>
+            <Tab.Navigator screenOptions={{headerStyle: {backgroundColor: '#08FF7A'}}}>
                 <Tab.Screen name='Routine' component={RoutineNavigator} options={{headerShown: false}} />
                 <Tab.Screen name='Pomodoro' component={Pomodoro} />
                 <Tab.Screen name='Mantra' component={Mantra} />

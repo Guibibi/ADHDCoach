@@ -8,7 +8,7 @@ const RoutineStack = createStackNavigator()
 
 export default function RoutineNavigator() {
     return (
-        <RoutineStack.Navigator>
+        <RoutineStack.Navigator screenOptions={{headerStyle: {backgroundColor: '#08FF7A'}, headerTintColor: 'white',}} >
             <RoutineStack.Screen name='Routine' component={Routine} />
             <RoutineStack.Screen name='AddRoutine' component={AddRoutine} />
         </RoutineStack.Navigator>
