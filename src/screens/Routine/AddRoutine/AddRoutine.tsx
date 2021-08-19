@@ -3,6 +3,7 @@ import { VStack, Center, FormControl, Input, Button } from "native-base";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
+import uuid from "react-native-uuid";
 
 export default function AddRoutine() {
   const [task, setTask] = useState("");
@@ -22,8 +23,18 @@ export default function AddRoutine() {
   };
 
   const handleInput = (event) => {
-    console.log(event.target);
+    console.log(event.nativeEvent.text);
     setTask(event.target.value);
+  };
+
+  const submitRoutine = async () => {
+    const taskEntry = { name: task, alarmTime: time, daysStreak: 0 };
+    try {
+      const jsonEntry = JSON.stringify(taskEntry);
+      await AsyncStorage.setItem("@task", jsonEntry);
+    } catch (e) {
+      console.log("error");
+    }
   };
 
   return (
@@ -40,11 +51,13 @@ export default function AddRoutine() {
       </FormControl>
       <FormControl isRequired>
         <FormControl.Label>What time?</FormControl.Label>
-        <Button onPress={showDate}>{time.toLocaleString()}</Button>
+        <Button onPress={showDate}>
+          {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+        </Button>
       </FormControl>
       <Button
         onPress={() => {
-          console.log(task, time);
+          submitRoutine();
         }}
       >
         Create
