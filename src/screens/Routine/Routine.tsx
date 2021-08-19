@@ -47,7 +47,6 @@ export default function Routine({ navigation }) {
               direction="row"
               justifyContent="space-around"
               alignItems="center"
-              space={4}
             >
               <VStack w={10}>
                 <Center>

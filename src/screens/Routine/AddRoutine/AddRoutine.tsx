@@ -1,77 +1,60 @@
 import React, { useState } from "react";
-import {
-  VStack,
-  Center,
-  FormControl,
-  Input,
-  Box,
-  Button,
-  Text,
-  HStack,
-  Select,
-  Flex,
-} from "native-base";
+import { VStack, Center, FormControl, Input, Button } from "native-base";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import DateTimePicker from "@react-native-community/datetimepicker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 
 export default function AddRoutine() {
-  const [datePickerVisibility, setDatePickerVisibility] = useState(false);
-  const [timeChoosen, setTimeChoosen] = useState(null);
+  const [task, setTask] = useState("");
+  const [time, setTime] = useState(new Date(1598051730000));
+  const [show, setShow] = useState(null);
 
-  const showDatePicker = () => {
-    setDatePickerVisibility(true);
+  const showDate = () => {
+    setShow(true);
+  };
+
+  const handleConfirm = (date) => {
+    setTime(date);
   };
 
   const hideDatePicker = () => {
-    setDatePickerVisibility(false);
+    setShow(false);
   };
 
-  const handleConfirm = (date: Date) => {
-    setTimeChoosen(date.toString());
+  const handleInput = (event) => {
+    console.log(event.target);
+    setTask(event.target.value);
   };
 
   return (
-    <Box safeArea>
-      <VStack space={10} mx={5} my={5}>
-        <FormControl isRequired>
-          <FormControl.Label>Task name?</FormControl.Label>
-          <Input p={2} placeholder="Take a shower" />
-        </FormControl>
-        <FormControl isRequired alignItems="center">
-          <FormControl.Label>What time?</FormControl.Label>
-          <Button
-            size="md"
-            w={80}
-            colorScheme="primary"
-            onPress={() => {
-              showDatePicker();
-            }}
-          >
-            Choose date
-          </Button>
-          <Text fontSize="xs">{timeChoosen}</Text>
-          <DateTimePickerModal
-            isVisible={datePickerVisibility}
-            mode="time"
-            onConfirm={handleConfirm}
-            onCancel={hideDatePicker}
-          />
-        </FormControl>
-        <FormControl isRequired>
-          <FormControl.Label>What interval?</FormControl.Label>
-          <Flex alignItems="center" direction="row" justifyContent="center">
-            <Text>Every </Text>
-            <Input p={2} placeholder="Number" />
-            <Select placeholder="Repetition" w={40}>
-              <Select.Item label="minutes" value="minutes" />
-              <Select.Item label="hours" value="hours" />
-              <Select.Item label="days" value="days" />
-              <Select.Item label="weeks" value="weeks" />
-              <Select.Item label="months" value="months" />
-              <Select.Item label="years" value="years" />
-            </Select>
-          </Flex>
-        </FormControl>
-      </VStack>
-    </Box>
+    <VStack space={10} mx={5} my={5} p={5} borderRadius="md" bg={"white"}>
+      <FormControl isRequired>
+        <FormControl.Label>Task name?</FormControl.Label>
+        <Input
+          value={task}
+          onChange={handleInput}
+          p={2}
+          placeholder="Workout"
+        />
+        <FormControl.ErrorMessage>What time?</FormControl.ErrorMessage>
+      </FormControl>
+      <FormControl isRequired>
+        <FormControl.Label>What time?</FormControl.Label>
+        <Button onPress={showDate}>{time.toLocaleString()}</Button>
+      </FormControl>
+      <Button
+        onPress={() => {
+          console.log(task, time);
+        }}
+      >
+        Create
+      </Button>
+      <DateTimePickerModal
+        isVisible={show}
+        mode="time"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
+    </VStack>
   );
 }
