@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { VStack, Center, FormControl, Input, Button } from "native-base";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import DateTimePicker from "@react-native-community/datetimepicker";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import uuid from "react-native-uuid";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
-export default function AddRoutine() {
+export default function AddRoutine({ navigation }) {
   const [task, setTask] = useState("");
   const [time, setTime] = useState(new Date(1598051730000));
   const [show, setShow] = useState(null);
@@ -23,17 +22,33 @@ export default function AddRoutine() {
   };
 
   const handleInput = (event) => {
-    console.log(event.nativeEvent.text);
-    setTask(event.target.value);
+    setTask(event.nativeEvent.text);
   };
 
   const submitRoutine = async () => {
-    const taskEntry = { name: task, alarmTime: time, daysStreak: 0 };
+    const taskEntry = {
+      title: task,
+      alarmTime: time,
+      streak: 0,
+      id: uuid.v4(),
+      doneToday: false,
+    };
+    const current = await AsyncStorage.getItem("tasks");
+    let currentTasks = JSON.parse(current);
+
+    if (!currentTasks) {
+      currentTasks = [];
+    }
+
+    currentTasks.push(taskEntry);
+
     try {
-      const jsonEntry = JSON.stringify(taskEntry);
-      await AsyncStorage.setItem("@task", jsonEntry);
+      const jsonEntry = JSON.stringify(currentTasks);
+      await AsyncStorage.setItem("tasks", jsonEntry);
     } catch (e) {
       console.log("error");
+    } finally {
+      navigation.goBack();
     }
   };
 
@@ -55,13 +70,7 @@ export default function AddRoutine() {
           {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
         </Button>
       </FormControl>
-      <Button
-        onPress={() => {
-          submitRoutine();
-        }}
-      >
-        Create
-      </Button>
+      <Button onPress={submitRoutine}>Create</Button>
       <DateTimePickerModal
         isVisible={show}
         mode="time"
