@@ -1,46 +1,40 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   Box,
   FlatList,
   Center,
-  NativeBaseProvider,
   Text,
-  Fab,
-  Icon,
   Checkbox,
-  Divider,
   VStack,
   Flex,
-  HStack,
 } from "native-base";
-import { Ionicons } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function Routine({ navigation }) {
-  const data = [
-    {
-      id: "bd7acbea-c1b1-46c2-aed5-3ad53abb28ba",
-      title: "Take a shower",
-      streak: 6,
-      alarmTime: "9:00am",
-    },
-    {
-      id: "3ac68afc-c605-48d3-a4f8-fbd91aa97f63",
-      title: "Brush teeth",
-      streak: 20,
-      alarmTime: "12:00am",
-    },
-    {
-      id: "58694a0f-3da1-471f-bd96-145571e29d72",
-      title: "Exercise",
-      streak: 15,
-      alarmTime: "9:00pm",
-    },
-  ];
+  const [tasks, setTasks] = useState(null);
+
+  const getData = async () => {
+    try {
+      const value = await AsyncStorage.getItem("tasks");
+      console.log(JSON.parse(value));
+      if (value !== null) {
+        setTasks(JSON.parse(value));
+      }
+    } catch (e) {
+      // error reading value
+    }
+  };
+
+  useEffect(() => {
+    if (tasks === null) {
+      getData();
+    }
+  });
 
   return (
     <Box h="100%" bg="coolGray.300">
       <FlatList
-        data={data}
+        data={tasks}
         renderItem={({ item }) => (
           <Box px={0} py={4} mb={0} bg="coolGray.100">
             <Flex
