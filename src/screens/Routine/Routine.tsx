@@ -9,27 +9,29 @@ import {
   Flex,
 } from "native-base";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useIsFocused } from "@react-navigation/core";
 
 export default function Routine({ navigation }) {
   const [tasks, setTasks] = useState(null);
-
+  const isFocused = useIsFocused();
   const getData = async () => {
     try {
       const value = await AsyncStorage.getItem("tasks");
-      console.log(JSON.parse(value));
       if (value !== null) {
         setTasks(JSON.parse(value));
       }
     } catch (e) {
       // error reading value
     }
+    console.log(tasks);
   };
 
   useEffect(() => {
-    if (tasks === null) {
-      getData();
-    }
-  });
+    getData();
+    console.log("====================================");
+    console.log("docused");
+    console.log("====================================");
+  }, [isFocused]);
 
   return (
     <Box h="100%" bg="coolGray.300">
