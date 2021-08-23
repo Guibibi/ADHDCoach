@@ -10,13 +10,28 @@ import {
 } from "native-base";
 import { Swipeable } from "react-native-gesture-handler";
 import * as Animatable from "react-native-animatable";
-export default function Card(props) {
+import { Ionicons } from "@expo/vector-icons";
+export default function Card({ item }) {
   const leftSwipe = () => {
-    return <Box></Box>;
+    return (
+      <Box
+        alignItems="center"
+        justifyContent="center"
+        px={0}
+        py={4}
+        borderRadius="md"
+        borderRightRadius="md"
+        w="30%"
+        my={2}
+        bg="red.600"
+      >
+        <Ionicons name="trash-outline" size={26} color="white" />
+      </Box>
+    );
   };
 
   return (
-    <Swipeable renderLeftActions={leftSwipe}>
+    <Swipeable renderLeftActions={leftSwipe} overshootLeft={false}>
       <Animatable.View animation="bounceIn">
         <Box px={0} py={4} borderRadius="lg" my={2} bg="white">
           <Flex
